@@ -154,4 +154,4 @@ BookVerse/
 ---
 
 ## 📄 License & Author
-Distributed under the **MIT License**. Created by [Your Name].
+Distributed under the **MIT License**. Created by [Rohit].
