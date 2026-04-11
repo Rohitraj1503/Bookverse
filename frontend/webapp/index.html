@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookVerse — Your Premium Book Destination</title>
+  <meta name="description" content="Discover thousands of books across every genre. Premium e-commerce for book lovers.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="navbar-root"></div>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="container flex-between">
+        <div class="hero-content">
+          <div class="hero-badge">🚀 New Arrivals Every Week</div>
+          <h1>Discover Your Next <span class="text-gradient">Favorite Book</span></h1>
+          <p>Explore a curated collection of over 10,000 titles across every genre. From bestsellers to hidden gems — your next adventure awaits.</p>
+          <div class="hero-actions">
+            <a href="books.html" class="btn btn-primary btn-lg">Browse Collection →</a>
+            <a href="#trending" class="btn btn-secondary btn-lg">Trending Now</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat"><h3 class="text-gradient" data-count="10000">0</h3><p>Books Available</p></div>
+            <div class="stat"><h3 class="text-gradient" data-count="5000">0</h3><p>Happy Readers</p></div>
+            <div class="stat"><h3 class="text-gradient" data-count="50">0</h3><p>Categories</p></div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-slider" id="heroSlider"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRENDING BOOKS -->
+    <section class="section" id="trending">
+      <div class="container">
+        <div class="section-header flex-between">
+          <div>
+            <h2>🔥 Trending <span class="text-gradient">Right Now</span></h2>
+            <p>The hottest books our readers can't put down</p>
+          </div>
+          <a href="books.html" class="btn btn-secondary btn-sm">View All →</a>
+        </div>
+        <div class="book-grid" id="trendingGrid"></div>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="section-header">
+          <h2>📂 Browse by <span class="text-gradient">Category</span></h2>
+          <p>Find exactly what you're looking for</p>
+        </div>
+        <div class="category-grid" id="categoryGrid"></div>
+      </div>
+    </section>
+
+    <!-- RECOMMENDATIONS -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="section-header flex-between">
+          <div>
+            <h2>⭐ Top Rated <span class="text-gradient">Books</span></h2>
+            <p>Highest rated by our community</p>
+          </div>
+          <a href="books.html?sort=rating" class="btn btn-secondary btn-sm">See More →</a>
+        </div>
+        <div class="book-grid" id="topRatedGrid"></div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="glass-card" style="padding:48px;text-align:center;">
+          <h2 style="font-size:1.8rem;margin-bottom:8px;">📬 Stay in the <span class="text-gradient">Loop</span></h2>
+          <p style="color:var(--text-secondary);margin-bottom:24px;">Get weekly book recommendations and exclusive deals delivered to your inbox.</p>
+          <div style="display:flex;gap:12px;max-width:480px;margin:0 auto;">
+            <input type="email" class="form-input" placeholder="Enter your email" style="flex:1;border-radius:40px;padding-left:20px;">
+            <button class="btn btn-primary" style="border-radius:40px;" onclick="Toast.success('Subscribed successfully!')">Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="footer-root"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — BookVerse</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="app">
+        <div id="navbar-root"></div>
+        <div class="auth-page">
+            <div class="auth-card">
+                <div class="text-center">
+                    <h2>Welcome <span class="text-gradient">Back</span></h2>
+                    <p class="auth-subtitle">Sign in to your BookVerse account</p>
+                </div>
+                <form id="loginForm" onsubmit="return handleLogin(event)">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" class="form-input" id="loginEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password"
+                            required>
+                    </div>
+                    <div
+                        style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;font-size:0.85rem">
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox">
+                            Remember me</label>
+                        <a href="#" style="color:var(--accent-1)">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center"
+                        id="loginBtn">Sign In</button>
+                </form>
+                <div class="divider">or continue with</div>
+                <div style="display:flex;gap:12px">
+                    <button class="btn btn-secondary" style="flex:1;justify-content:center"
+                        onclick="Toast.info('Coming soon!')">🔵 Google</button>
+                    <button class="btn btn-secondary" style="flex:1;justify-content:center"
+                        onclick="Toast.info('Coming soon!')">⚫ GitHub</button>
+                </div>
+                <p style="text-align:center;margin-top:24px;font-size:0.9rem;color:var(--text-secondary)">
+                    Don't have an account? <a href="register.html" style="color:var(--accent-1);font-weight:600">Sign
+                        Up</a>
+                </p>
+                <div
+                    style="margin-top:16px;padding:12px;border-radius:var(--radius-sm);background:var(--bg-glass);border:var(--border-glass);font-size:0.8rem;color:var(--text-muted)">
+                    <strong>Demo accounts:</strong><br>
+                    Admin: admin@bookverse.com<br>
+                    Customer: jane@example.com<br>
+                    <em>(any password works)</em>
+                </div>
+            </div>
+        </div>
+        <div class="bg-orbs">
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>
