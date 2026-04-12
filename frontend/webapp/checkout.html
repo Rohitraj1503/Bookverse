@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout — BookVerse</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+
+<body>
+    <div id="app">
+        <div id="navbar-root"></div>
+
+        <div class="checkout-page container">
+            <!-- Progress Indicator -->
+            <div class="checkout-progress">
+                <div class="checkout-progress__step completed">
+                    <span class="step-dot">✓</span>
+                    <span class="step-label">Cart</span>
+                </div>
+                <div class="checkout-progress__line active"></div>
+                <div class="checkout-progress__step active">
+                    <span class="step-dot">2</span>
+                    <span class="step-label">Checkout</span>
+                </div>
+                <div class="checkout-progress__line"></div>
+                <div class="checkout-progress__step">
+                    <span class="step-dot">3</span>
+                    <span class="step-label">Confirmation</span>
+                </div>
+            </div>
+
+            <div class="checkout-layout" id="checkoutContainer"></div>
+        </div>
+
+        <div id="footer-root"></div>
+    </div>
+    <script src="js/app.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+
+</html>

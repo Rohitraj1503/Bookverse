@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — BookVerse</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div id="navbar-root"></div>
+        <div class="container" style="padding-top:calc(var(--nav-height) + 32px)">
+            <div class="flex-between mb-3">
+                <div>
+                    <h2 style="font-size:1.8rem;font-weight:700">📊 Admin <span class="text-gradient">Dashboard</span>
+                    </h2>
+                    <p style="color:var(--text-muted)">Manage your bookstore</p>
+                </div>
+                <button class="btn btn-primary" onclick="showAddBookModal()">+ Add New Book</button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="admin-stats" id="statsCards"></div>
+
+            <!-- Tabs -->
+            <div
+                style="display:flex;gap:4px;margin-bottom:24px;background:var(--bg-glass);padding:4px;border-radius:var(--radius-md);width:fit-content;border:var(--border-glass)">
+                <button class="btn btn-primary btn-sm" id="tab-books" onclick="showAdminTab('books',this)">📚
+                    Books</button>
+                <button class="btn btn-secondary btn-sm" id="tab-orders" onclick="showAdminTab('orders',this)">📦
+                    Orders</button>
+                <button class="btn btn-secondary btn-sm" id="tab-categories"
+                    onclick="showAdminTab('categories',this)">📂 Categories</button>
+                <button class="btn btn-secondary btn-sm" id="tab-analytics" onclick="showAdminTab('analytics',this)">📈
+                    Analytics</button>
+            </div>
+
+            <div id="adminContent"></div>
+        </div>
+        <div id="footer-root"></div>
+    </div>
+    <script src="js/app.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+
+</html>
