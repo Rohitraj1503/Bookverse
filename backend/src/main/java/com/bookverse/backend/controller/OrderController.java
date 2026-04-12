@@ -16,16 +16,28 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<?> placeOrder(@RequestBody Order order) {
-        System.out.println("DEBUG: Incoming Order Request: " + order);
-        if (order.getItems() != null) {
-            System.out.println("DEBUG: Order items count: " + order.getItems().size());
-        }
         try {
-            return ResponseEntity.ok(orderService.placeOrder(order));
-        } catch (Exception e) {
+            Order savedOrder = orderService.placeOrder(order);
+            return ResponseEntity.ok(savedOrder);
+        } catch (RuntimeException e) {
+            // Log the error for internal tracking
+            System.err.println("Order creation failed: " + e.getMessage());
+            
             java.util.Map<String, String> error = new java.util.HashMap<>();
-            error.put("error", e.getMessage());
+            String userMessage = e.getMessage();
+            
+            // Mask internal SQL errors if they leak through
+            if (userMessage.contains("SQL") || userMessage.contains("column") || userMessage.contains("field list")) {
+                userMessage = "A database error occurred during checkout. Our team has been notified.";
+            }
+            
+            error.put("error", userMessage);
             return ResponseEntity.badRequest().body(error);
+        } catch (Exception e) {
+            System.err.println("Critical failure during order processing: " + e.getMessage());
+            java.util.Map<String, String> error = new java.util.HashMap<>();
+            error.put("error", "An unexpected error occurred. Please try again later.");
+            return ResponseEntity.internalServerError().body(error);
         }
     }
 

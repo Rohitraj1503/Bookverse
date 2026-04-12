@@ -186,7 +186,9 @@ async function renderTracking(el) {
             return;
         }
 
-        const estDelivery = order.estimatedDelivery ? new Date(order.estimatedDelivery).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Calculating...';
+        const estDelivery = order.estimatedDelivery 
+            ? new Date(order.estimatedDelivery).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) 
+            : 'Processing...';
 
         el.innerHTML = `
         <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:24px">🚚 Order Tracking</h2>
