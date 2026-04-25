@@ -17,13 +17,13 @@ Explore the visual design and user flow through these snapshots:
 ### Customer Experience
 | Home Page | Books Listing | Cart & Checkout |
 | :---: | :---: | :---: |
-| ![Home Page](./screenshots/user_home.png) | ![Books Listing](./screenshots/books_listing.png) | ![Cart](./screenshots/cart_checkout.png) |
+| ![Home Page](C:\Users\buddy\OneDrive\Desktop\Bookverse\images\homepage.png) | ![Books Listing](C:\Users\buddy\OneDrive\Desktop\Bookverse\images\books_listing.png) | ![Cart](C:\Users\buddy\OneDrive\Desktop\Bookverse\images\cart_checkout.png) |
 | *Curated landing with featured books* | *Advanced filtering and searching* | *Streamlined purchase flow* |
 
 ### Administrative Dashboard
 | Analytics Overview | Inventory Management | Order Fulfillment |
 | :---: | :---: | :---: |
-| ![Admin Dashboard](./screenshots/admin_dashboard.png) | ![Book Management](./screenshots/admin_books.png) | ![Order Management](./screenshots/admin_orders.png) |
+| ![Admin Dashboard](C:\Users\buddy\OneDrive\Desktop\Bookverse\images\admin_dashboard.png) | ![Book Management](C:\Users\buddy\OneDrive\Desktop\Bookverse\images\admin_books.png) | ![Order Management](C:\Users\buddy\OneDrive\Desktop\Bookverse\images\admin_orders.png) |
 | *Real-time sales and revenue KPIs* | *Full CRUD for book inventory* | *Track and update order statuses* |
 
 ---
