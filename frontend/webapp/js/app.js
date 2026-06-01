@@ -23,6 +23,9 @@ const BookStore = {
                     fetch(`${API_BASE_URL}/books`),
                     fetch(`${API_BASE_URL}/categories`)
                 ]);
+                if (!booksRes.ok || !catsRes.ok) {
+                    throw new Error(`API returned error status: books=${booksRes.status}, categories=${catsRes.status}`);
+                }
                 this.books = await booksRes.json();
                 this.categories = await catsRes.json();
                 // Transform cover to coverUrl if needed (backend uses coverUrl, but frontend uses cover)
