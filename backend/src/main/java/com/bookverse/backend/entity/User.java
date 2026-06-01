@@ -29,6 +29,7 @@ public class User {
     @Column(name = "zip_code")
     private String zipCode;
 
+    @Column(name = "`role`")
     @Enumerated(EnumType.STRING)
     private Role role = Role.customer;
 

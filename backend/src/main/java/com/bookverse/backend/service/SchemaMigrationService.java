@@ -34,7 +34,7 @@ public class SchemaMigrationService implements CommandLineRunner {
                     "('History', 'history', 'Historical events, civilizations, and eras', '🏛️')");
                 
                 // Seed Users
-                jdbcTemplate.execute("INSERT INTO users (full_name, email, password_hash, role, phone) VALUES " +
+                jdbcTemplate.execute("INSERT INTO users (full_name, email, password_hash, `role`, phone) VALUES " +
                     "('Admin User', 'admin@bookverse.com', 'admin123', 'admin', '+1234567890'), " +
                     "('Jane Reader', 'jane@example.com', 'password123', 'customer', '+1987654321')");
                 
