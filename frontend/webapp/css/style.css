@@ -918,7 +918,10 @@ body::after {
     overflow: hidden;
     box-shadow: var(--shadow-lg);
     transition: all 0.7s var(--ease-out);
-    will-change: transform, opacity
+    will-change: transform, opacity;
+    opacity: 0;
+    transform: translateX(0) scale(0.7);
+    pointer-events: none;
 }
 
 .hero-slider .slide-card img {
@@ -930,21 +933,24 @@ body::after {
 .hero-slider .slide-card.active {
     z-index: 3;
     transform: translateX(0) scale(1);
-    opacity: 1
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .hero-slider .slide-card.prev {
     z-index: 2;
     transform: translateX(-65%) scale(0.82) rotateY(12deg);
     opacity: 0.5;
-    filter: brightness(0.6)
+    filter: brightness(0.6);
+    pointer-events: auto;
 }
 
 .hero-slider .slide-card.next {
     z-index: 2;
     transform: translateX(65%) scale(0.82) rotateY(-12deg);
     opacity: 0.5;
-    filter: brightness(0.6)
+    filter: brightness(0.6);
+    pointer-events: auto;
 }
 
 /* ======== SECTIONS ======== */
