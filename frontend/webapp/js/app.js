@@ -3,7 +3,7 @@
    Theme, Toast, Modal, Data Store, Cart
    ======================================== */
 // Set this to your deployed Render backend URL (e.g., https://bookverse-backend.onrender.com)
-const RENDER_BACKEND_URL = 'https://YOUR-RENDER-BACKEND.onrender.com';
+const RENDER_BACKEND_URL = 'https://bookverse-w7kf.onrender.com';
 
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8080/api'
