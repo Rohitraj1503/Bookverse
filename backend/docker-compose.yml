@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # ==================================================
+  # BookVerse Spring Boot Backend Service
+  # ==================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bookverse-backend
+    restart: unless-stopped
+    stop_grace_period: 25s
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      - PORT=8080
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-jdbc:mysql://mysql:3306/bookverse?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-root}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-Admin@1234}
+      - JAVA_OPTS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
+    volumes:
+      - bookverse_uploads:/app/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+        required: false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    networks:
+      - bookverse-network
+
+  # ==================================================
+  # Local Development MySQL Service (Optional)
+  # For cloud production, point SPRING_DATASOURCE_URL
+  # to your persistent cloud MySQL provider instead.
+  # ==================================================
+  mysql:
+    image: mysql:8.0
+    container_name: bookverse-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-bookverse}
+      MYSQL_ROOT_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-Admin@1234}
+    ports:
+      - "${MYSQL_LOCAL_PORT:-3307}:3306"
+    volumes:
+      - bookverse_mysql_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - bookverse-network
+
+volumes:
+  bookverse_mysql_data:
+    name: bookverse_mysql_data
+  bookverse_uploads:
+    name: bookverse_uploads
+
+networks:
+  bookverse-network:
+    name: bookverse-network
+    driver: bridge

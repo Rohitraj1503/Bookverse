@@ -15,4 +15,7 @@ public class CategoryController {
 
     @GetMapping
     public List<Category> getAll() { return categoryService.getAll(); }
+
+    @PostMapping
+    public Category create(@RequestBody Category category) { return categoryService.save(category); }
 }

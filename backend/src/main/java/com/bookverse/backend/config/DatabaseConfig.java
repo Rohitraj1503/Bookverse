@@ -1,5 +1,6 @@
 package com.bookverse.backend.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class DatabaseConfig {
         // Default database configuration (MySQL)
         String url = (dbUrlEnv != null && !dbUrlEnv.isEmpty()) 
             ? dbUrlEnv 
-            : "jdbc:mysql://localhost:3306/bookverse?useSSL=false&serverTimezone=UTC";
+            : "jdbc:mysql://localhost:3306/bookverse?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
         
         String username = System.getenv("SPRING_DATASOURCE_USERNAME") != null 
             ? System.getenv("SPRING_DATASOURCE_USERNAME") 
@@ -37,11 +38,22 @@ public class DatabaseConfig {
             : "Admin@1234";
 
         System.out.println("[DatabaseConfig] Connecting to database: " + url.split("\\?")[0]);
-        return DataSourceBuilder.create()
-            .driverClassName("com.mysql.cj.jdbc.Driver")
-            .url(url)
-            .username(username)
-            .password(password)
-            .build();
+        
+        HikariDataSource ds = new HikariDataSource();
+        ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        ds.setJdbcUrl(url);
+        ds.setUsername(username);
+        ds.setPassword(password);
+        
+        // Resilience settings for cloud-hosted MySQL (Render, Aiven, Railway, AWS RDS, PlanetScale, Clever Cloud)
+        ds.setMaximumPoolSize(10);
+        ds.setMinimumIdle(2);
+        ds.setIdleTimeout(300000);   // 5 minutes
+        ds.setMaxLifetime(1800000);  // 30 minutes
+        ds.setConnectionTimeout(30000); // 30 seconds
+        ds.setKeepaliveTime(60000);   // 1 minute keepalive to prevent firewall/NAT drops
+        ds.setValidationTimeout(5000);
+        
+        return ds;
     }
 }

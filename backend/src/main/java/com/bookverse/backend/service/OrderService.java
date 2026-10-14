@@ -65,6 +65,10 @@ public class OrderService {
 
     public List<Order> getByUserId(Integer userId) { return orderRepository.findByUserIdOrderByCreatedAtDesc(userId); }
 
+    public java.util.Optional<Order> getById(Integer id) { return orderRepository.findById(id); }
+
+    public java.util.Optional<Order> getByOrderNumber(String orderNumber) { return orderRepository.findByOrderNumber(orderNumber); }
+
     public List<Order> getAllOrders() { return orderRepository.findAllByOrderByCreatedAtDesc(); }
 
     @Transactional

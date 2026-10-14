@@ -43,16 +43,32 @@ CREATE TABLE categories (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =============================================
--- 3. BOOKS TABLE
+-- 3. LANGUAGES TABLE
+-- =============================================
+CREATE TABLE IF NOT EXISTS languages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(10) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    native_name VARCHAR(100),
+    script VARCHAR(50),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =============================================
+-- 4. BOOKS TABLE
 -- =============================================
 CREATE TABLE books (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
+    subtitle VARCHAR(255) NULL,
     author VARCHAR(200) NOT NULL,
     isbn VARCHAR(20) UNIQUE,
     description TEXT,
+    short_description TEXT,
     price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
     original_price DECIMAL(10, 2) CHECK (original_price >= 0),
+    discount DECIMAL(5, 2) DEFAULT 0.00,
     stock INT NOT NULL DEFAULT 0 CHECK (stock >= 0),
     category_id INT NOT NULL,
     cover_url VARCHAR(500),
@@ -61,8 +77,21 @@ CREATE TABLE books (
     pages INT,
     publisher VARCHAR(200),
     publish_date DATE,
+    edition VARCHAR(50) NULL,
+    format VARCHAR(50) DEFAULT 'Paperback',
+    genre VARCHAR(100) NULL,
     language VARCHAR(50) DEFAULT 'English',
     is_featured BOOLEAN DEFAULT FALSE,
+    is_bestseller BOOLEAN DEFAULT FALSE,
+    is_new_arrival BOOLEAN DEFAULT FALSE,
+    series_name VARCHAR(255) NULL,
+    volume_number VARCHAR(50) NULL,
+    issue_number VARCHAR(50) NULL,
+    illustrator VARCHAR(255) NULL,
+    artist VARCHAR(255) NULL,
+    publisher_imprint VARCHAR(255) NULL,
+    reading_direction VARCHAR(50) DEFAULT 'Left-to-Right',
+    age_recommendation VARCHAR(50) NULL,
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -70,7 +99,11 @@ CREATE TABLE books (
     INDEX idx_category (category_id),
     INDEX idx_title (title),
     INDEX idx_author (author),
+    INDEX idx_language (language),
+    INDEX idx_format (format),
     INDEX idx_featured (is_featured),
+    INDEX idx_bestseller (is_bestseller),
+    INDEX idx_new_arrival (is_new_arrival),
     INDEX idx_rating (rating),
     FULLTEXT idx_search (title, author, description)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -197,3 +230,90 @@ INSERT INTO books (title, author, isbn, description, price, original_price, stoc
 ('1984', 'George Orwell', '9780451524935', 'A dystopian masterpiece about totalitarianism, surveillance, and the power of language.', 879.20, 1279.20, 90, 1, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1657781256i/61439040.jpg', 4.4, 4200, 328, 'Signet Classic', '1949-06-08', FALSE),
 ('The Subtle Art of Not Giving a F*ck', 'Mark Manson', '9780062457714', 'A counterintuitive approach to living a good life by choosing what truly matters.', 1199.20, 1760.00, 85, 5, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1465761302i/28257707.jpg', 3.9, 2800, 224, 'Harper', '2016-09-13', FALSE),
 ('Cosmos', 'Carl Sagan', '9780345539434', 'Explores 15 billion years of cosmic evolution and the development of science and civilization.', 1119.20, 1599.20, 40, 3, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1388620656i/55030.jpg', 4.6, 1500, 396, 'Ballantine Books', '1980-10-12', FALSE);
+
+-- =============================================
+-- 7. REVIEWS TABLE
+-- =============================================
+CREATE TABLE IF NOT EXISTS reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    book_id INT NOT NULL,
+    rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    title VARCHAR(200),
+    body TEXT,
+    verified_purchase BOOLEAN DEFAULT FALSE,
+    helpful_count INT DEFAULT 0,
+    reported BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_user_book (user_id, book_id),
+    INDEX idx_review_book (book_id),
+    INDEX idx_review_user (user_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =============================================
+-- 8. WISHLIST TABLE
+-- =============================================
+CREATE TABLE IF NOT EXISTS wishlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    book_id INT NOT NULL,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_wishlist_user_book (user_id, book_id),
+    INDEX idx_wishlist_user (user_id),
+    INDEX idx_wishlist_book (book_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =============================================
+-- 9. COUPONS TABLE
+-- =============================================
+CREATE TABLE IF NOT EXISTS coupons (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    type VARCHAR(20) NOT NULL DEFAULT 'percentage',
+    value DECIMAL(10,2) NOT NULL,
+    min_order_value DECIMAL(10,2) DEFAULT 0,
+    max_discount DECIMAL(10,2),
+    expires_at DATETIME,
+    usage_limit INT DEFAULT NULL,
+    used_count INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =============================================
+-- 10. COUPON USAGE TABLE
+-- =============================================
+CREATE TABLE IF NOT EXISTS coupon_usage (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    coupon_id INT NOT NULL,
+    user_id INT NOT NULL,
+    order_id INT,
+    used_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_coupon_usage_coupon (coupon_id),
+    INDEX idx_coupon_usage_user (user_id),
+    FOREIGN KEY (coupon_id) REFERENCES coupons(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =============================================
+-- SEED DATA — Coupons
+-- =============================================
+INSERT IGNORE INTO coupons (code, type, value, min_order_value, max_discount, expires_at, usage_limit, is_active) VALUES
+('BOOK10', 'percentage', 10.00, 500.00, 300.00, DATE_ADD(NOW(), INTERVAL 90 DAY), 500, TRUE),
+('READ20', 'percentage', 20.00, 1000.00, 600.00, DATE_ADD(NOW(), INTERVAL 60 DAY), 200, TRUE),
+('FLAT100', 'fixed', 100.00, 800.00, 100.00, DATE_ADD(NOW(), INTERVAL 30 DAY), 1000, TRUE),
+('WELCOME50', 'fixed', 50.00, 300.00, 50.00, DATE_ADD(NOW(), INTERVAL 180 DAY), 1000, TRUE);
+
+-- =============================================
+-- SEED DATA — Sample Reviews
+-- =============================================
+INSERT IGNORE INTO reviews (user_id, book_id, rating, title, body, verified_purchase, helpful_count) VALUES
+(2, 1, 5, 'Life-changing perspective!', 'The Midnight Library made me reconsider all the choices I questioned. Matt Haig has a beautiful way with words.', TRUE, 12),
+(2, 2, 5, 'Every habit really counts', 'Atomic Habits gave me actionable steps. The 1% better every day philosophy has transformed my mornings.', TRUE, 24),
+(2, 3, 4, 'Fascinating overview of history', 'A grand sweeping view of human history. Highly thought provoking and well written.', TRUE, 8);
+

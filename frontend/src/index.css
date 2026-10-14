@@ -1,0 +1,150 @@
+/* BookVerse Root CSS */
+@import './styles/style.css';
+@import './styles/components.css';
+@import './styles/pages.css';
+
+/* React App root wrapper */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* Fix for smooth transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Modal animation fixes for React state */
+.modal-overlay {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-overlay .modal {
+  transform: scale(0.95) translateY(10px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active .modal {
+  transform: scale(1) translateY(0);
+}
+
+/* Toast container */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+}
+
+/* User dropdown trigger */
+.user-dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.user-dropdown .dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: var(--bg-card);
+  border: var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  min-width: 220px;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: var(--blur);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.user-dropdown .dropdown-content a,
+.user-dropdown .dropdown-content button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.user-dropdown .dropdown-content a:hover,
+.user-dropdown .dropdown-content button:hover {
+  background: var(--bg-glass-hover);
+  color: var(--accent-1-light);
+}
+
+.user-dropdown .dropdown-header {
+  padding: 4px 12px 8px;
+}
+
+.user-dropdown .dropdown-header .welcome {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.user-dropdown .dropdown-header .name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.user-dropdown hr {
+  border: none;
+  border-top: var(--border-glass);
+  margin: 4px 0;
+}
+
+.user-dropdown .logout-btn {
+  color: var(--accent-4);
+}
+
+.user-dropdown .logout-btn:hover {
+  background: rgba(244, 63, 94, 0.1);
+  color: var(--accent-4);
+}

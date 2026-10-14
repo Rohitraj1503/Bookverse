@@ -49,11 +49,13 @@ Explore the visual design and user flow through these snapshots:
 ## 💻 Tech Stack
 
 ### Frontend
-- **Language**: Vanilla JavaScript (ES6+), HTML5, CSS3
-- **Styling**: Custom CSS with Glassmorphism and Neon accents
-- **Typography**: Inter & Roboto (Google Fonts)
-- **Icons**: Font Awesome 6
-- **Data Fetching**: Native Fetch API (RESTful interaction)
+- **Framework**: React 18 + Vite
+- **Routing**: React Router DOM (v6)
+- **State & Context**: Context API (Auth, Cart, Theme, Toast)
+- **Data Fetching**: Axios & RESTful API Service Layer
+- **Charts & Visualization**: Chart.js & React-Chartjs-2
+- **Styling**: Custom CSS Design System with Glassmorphism, Neon accents & Theme Switcher (Dark/Light)
+- **Typography**: Inter (Google Fonts)
 
 ### Backend
 - **Framework**: Spring Boot 3.2.0 (Java 17)

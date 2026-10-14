@@ -1,17 +1,45 @@
-# Java/Maven
+# Java & Maven
 target/
+backend/target/
 *.class
+*.jar
+*.war
 
-# IDEs
+# Frontend & Vite
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+.vite/
+frontend/.vite/
+
+# Environment Variables & Local Secrets
+.env
+.env.local
+.env.*.local
+frontend/.env
+frontend/.env.local
+
+# IDEs & Editors
 .vscode/
 .idea/
 *.swp
 *.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
 
-# OS
+# Logs & Temporary Files
+*.log
+logs/
+*.tmp
+*.bak
+*~
+
+# Operating System Metadata
 .DS_Store
 Thumbs.db
-
-# Frontend
-node_modules/
-.env
+ehthumbs.db
+[Dd]esktop.ini

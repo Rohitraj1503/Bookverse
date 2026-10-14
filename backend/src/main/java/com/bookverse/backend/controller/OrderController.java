@@ -44,6 +44,20 @@ public class OrderController {
     @GetMapping("/{userId}")
     public List<Order> getByUserId(@PathVariable Integer userId) { return orderService.getByUserId(userId); }
 
+    @GetMapping("/track/{orderNumber}")
+    public ResponseEntity<?> trackOrder(@PathVariable String orderNumber) {
+        return orderService.getByOrderNumber(orderNumber)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/details/{id}")
+    public ResponseEntity<?> getOrderDetails(@PathVariable Integer id) {
+        return orderService.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping
     public List<Order> getAllOrders() { return orderService.getAllOrders(); }
 
