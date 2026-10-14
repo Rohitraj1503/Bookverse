@@ -60,9 +60,8 @@ const Navbar = () => {
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="container flex-between">
-          <Link to="/" className="nav-logo">
-            <span className="logo-icon">📚</span>
-            <span className="text-gradient">BookVerse</span>
+          <Link to="/" className="nav-logo-link" title="BookVerse">
+            <img src="/logo.png" alt="BookVerse — Discover a Larger World" className="nav-logo-img" />
           </Link>
 
           <div className="nav-links editorial-nav-center">

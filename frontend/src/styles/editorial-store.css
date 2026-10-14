@@ -26,6 +26,40 @@
   height: 60px !important;
 }
 
+.nav-logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 4px 0;
+}
+
+.nav-logo-img {
+  height: 42px;
+  max-width: 175px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.nav-logo-link:hover .nav-logo-img {
+  transform: scale(1.03);
+  filter: drop-shadow(0 4px 14px rgba(240, 185, 11, 0.3));
+}
+
+.footer-logo-img {
+  height: 44px;
+  max-width: 190px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+  transition: transform 0.25s ease;
+}
+
+.footer-logo-img:hover {
+  transform: scale(1.02);
+}
+
 .editorial-nav-center {
   display: flex;
   align-items: center;

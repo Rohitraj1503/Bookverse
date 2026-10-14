@@ -7,10 +7,9 @@ const Footer = () => {
       <div className="container">
         <div className="editorial-footer-grid">
           <div className="editorial-footer-brand">
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>📚</span>
-              <span style={{ color: '#FFFFFF', letterSpacing: '-0.02em' }}>BookVerse</span>
-            </h3>
+            <Link to="/" style={{ display: 'inline-block', marginBottom: '16px' }}>
+              <img src="/logo.png" alt="BookVerse — Discover a Larger World" className="footer-logo-img" />
+            </Link>
             <p>
               An immersive digital sanctuary for literature, celebrating authors,
               publishers, and the timeless art of the written word.
