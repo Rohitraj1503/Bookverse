@@ -46,7 +46,7 @@ const Login = () => {
 
   const handleFillDemo = (demoEmail) => {
     setEmail(demoEmail);
-    setPassword('password123');
+    setPassword(demoEmail.includes('admin') ? 'admin123' : 'password123');
   };
 
   return (

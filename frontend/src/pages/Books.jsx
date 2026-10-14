@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import bookService from '../services/bookService';
 import categoryService from '../services/categoryService';
@@ -250,6 +250,48 @@ const Books = () => {
     window.scrollTo({ top: 200, behavior: 'smooth' });
   };
 
+  const paginationScrollRef = useRef(null);
+  const activePageButtonRef = useRef(null);
+
+  // Auto-scroll the active page button into view within the horizontal track without jumping window
+  useEffect(() => {
+    if (activePageButtonRef.current && paginationScrollRef.current) {
+      const container = paginationScrollRef.current;
+      const button = activePageButtonRef.current;
+
+      const containerWidth = container.clientWidth;
+      const buttonLeft = button.offsetLeft;
+      const buttonWidth = button.clientWidth;
+
+      const targetScrollLeft = buttonLeft - (containerWidth / 2) + (buttonWidth / 2);
+
+      container.scrollTo({
+        left: Math.max(0, targetScrollLeft),
+        behavior: 'smooth',
+      });
+    }
+  }, [currentPage, totalPages]);
+
+  // Enable mouse-wheel horizontal scrolling over the pagination track
+  useEffect(() => {
+    const scrollEl = paginationScrollRef.current;
+    if (!scrollEl) return;
+
+    const handleWheel = (e) => {
+      if (scrollEl.scrollWidth > scrollEl.clientWidth) {
+        if (Math.abs(e.deltaY) > 0) {
+          scrollEl.scrollLeft += e.deltaY;
+          e.preventDefault();
+        }
+      }
+    };
+
+    scrollEl.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      scrollEl.removeEventListener('wheel', handleWheel);
+    };
+  }, [totalPages]);
+
   return (
     <div className="books-page container">
       {/* Page Header */}
@@ -330,28 +372,49 @@ const Books = () => {
 
           {/* Pagination */}
           {!loading && totalPages > 1 && (
-            <div className="pagination-bar" id="pagination" style={{ marginTop: '40px' }}>
-              <button
-                disabled={currentPage === 1}
-                onClick={() => goToPage(currentPage - 1)}
-              >
-                ‹
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <div className="pagination-wrapper" style={{ marginTop: '40px' }}>
+              <div className="pagination-container" id="pagination">
                 <button
-                  key={p}
-                  className={p === currentPage ? 'active' : ''}
-                  onClick={() => goToPage(p)}
+                  type="button"
+                  className="pagination-nav-btn pagination-nav-prev"
+                  disabled={currentPage === 1}
+                  onClick={() => goToPage(currentPage - 1)}
+                  aria-label="Previous Page"
                 >
-                  {p}
+                  ‹
                 </button>
-              ))}
-              <button
-                disabled={currentPage === totalPages}
-                onClick={() => goToPage(currentPage + 1)}
-              >
-                ›
-              </button>
+
+                <div
+                  className="pagination-scroll"
+                  ref={paginationScrollRef}
+                >
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                    <button
+                      key={p}
+                      ref={(el) => {
+                        if (p === currentPage) activePageButtonRef.current = el;
+                      }}
+                      type="button"
+                      className={p === currentPage ? 'active' : ''}
+                      onClick={() => goToPage(p)}
+                      aria-label={`Page ${p}`}
+                      aria-current={p === currentPage ? 'page' : undefined}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  className="pagination-nav-btn pagination-nav-next"
+                  disabled={currentPage === totalPages}
+                  onClick={() => goToPage(currentPage + 1)}
+                  aria-label="Next Page"
+                >
+                  ›
+                </button>
+              </div>
             </div>
           )}
         </main>

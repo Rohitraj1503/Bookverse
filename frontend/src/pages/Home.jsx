@@ -85,10 +85,10 @@ const Home = () => {
   const displayedBooks = selectedCategory === 'all'
     ? allBooks
     : allBooks.filter((b) => {
-        const catVal = (b.category || b.categoryName || '').toLowerCase();
-        const targetVal = String(selectedCategory).toLowerCase();
-        return catVal === targetVal || String(b.categoryId) === targetVal;
-      });
+      const catVal = (b.category || b.categoryName || '').toLowerCase();
+      const targetVal = String(selectedCategory).toLowerCase();
+      return catVal === targetVal || String(b.categoryId) === targetVal;
+    });
 
   const primaryHeroBook = featuredBooks[0] || allBooks[0];
   const secondaryHeroBooks = [

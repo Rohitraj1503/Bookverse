@@ -345,47 +345,145 @@
     min-height: 400px;
 }
 
-/* --- Pagination Bar --- */
+/* --- Responsive Horizontal Scrolling Pagination Bar --- */
+.pagination-wrapper {
+    width: 100%;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-container,
 .pagination-bar {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    margin-top: 48px;
-    padding-top: 32px;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    gap: 8px;
+    max-width: 100%;
+    min-width: 0;
+    width: fit-content;
+    position: relative;
 }
 
+.pagination-scroll {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    max-width: min(720px, calc(100vw - 160px));
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(240, 185, 11, 0.35) transparent;
+    -webkit-overflow-scrolling: touch;
+    padding: 6px 4px;
+    scroll-behavior: smooth;
+}
+
+.pagination-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.pagination-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+
+.pagination-scroll::-webkit-scrollbar-thumb {
+    background: rgba(240, 185, 11, 0.35);
+    border-radius: 4px;
+}
+
+.pagination-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(240, 185, 11, 0.65);
+}
+
+.pagination-scroll button,
 .pagination-bar button {
+    flex: 0 0 auto;
     min-width: 40px;
     height: 40px;
+    padding: 0 10px;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary, #a1a1aa);
     font-size: 0.85rem;
     font-weight: 600;
-    font-family: var(--font);
+    font-family: var(--font, inherit);
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
+    user-select: none;
 }
 
-.pagination-bar button:hover:not(:disabled) {
-    background: rgba(124, 58, 237, 0.1);
-    border-color: rgba(124, 58, 237, 0.2);
-    color: var(--accent-1-light);
+.pagination-scroll button:hover:not(:disabled):not(.active),
+.pagination-bar button:hover:not(:disabled):not(.active) {
+    background: rgba(240, 185, 11, 0.12);
+    border-color: rgba(240, 185, 11, 0.35);
+    color: #F0B90B;
 }
 
+.pagination-scroll button.active,
 .pagination-bar button.active {
-    background: var(--gradient-main);
-    color: #fff;
-    border-color: transparent;
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+    background: var(--gradient-gold, linear-gradient(135deg, #F0B90B 0%, #D4AF37 50%, #B8860B 100%));
+    color: #000;
+    font-weight: 700;
+    border-color: #F0B90B;
+    box-shadow: 0 4px 14px rgba(240, 185, 11, 0.35);
 }
 
+.pagination-scroll button:disabled,
 .pagination-bar button:disabled {
-    opacity: 0.3;
+    opacity: 0.25;
     cursor: not-allowed;
+}
+
+.pagination-nav-btn {
+    flex: 0 0 auto;
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1.25rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.pagination-nav-btn:hover:not(:disabled) {
+    background: rgba(240, 185, 11, 0.15);
+    border-color: #F0B90B;
+    color: #F0B90B;
+}
+
+.pagination-nav-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 640px) {
+    .pagination-scroll {
+        max-width: calc(100vw - 120px);
+        gap: 6px;
+    }
+    .pagination-scroll button,
+    .pagination-bar button,
+    .pagination-nav-btn {
+        min-width: 36px;
+        height: 36px;
+        font-size: 0.8rem;
+    }
 }
 
 

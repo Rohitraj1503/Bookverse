@@ -53,6 +53,7 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   // Modal states
+  const [selectedBook, setSelectedBook] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CursorGlow from './components/CursorGlow';
 import ProtectedRoute from './components/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import Home from './pages/Home';
 import Books from './pages/Books';
@@ -44,7 +45,9 @@ function App() {
             path="/admin"
             element={
               <ProtectedRoute adminOnly={true}>
-                <AdminDashboard />
+                <ErrorBoundary>
+                  <AdminDashboard />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
