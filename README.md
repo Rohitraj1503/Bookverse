@@ -14,6 +14,12 @@
 
 Explore the visual design and user flow through these snapshots:
 
+### 🌌 Cinematic 3D Landing Page
+| 3D Book Cyclone Vortex |
+| :---: |
+| ![3D Book Cyclone](./screenshots/landing_cyclone.png) |
+| *Immersive Three.js vortex featuring real book covers, multi-orbital rotation, and hyperspace warp transition* |
+
 ### Customer Experience
 | Home Page | Books Listing | Cart & Checkout |
 | :---: | :---: | :---: |
@@ -29,6 +35,13 @@ Explore the visual design and user flow through these snapshots:
 ---
 
 ## 🚀 Key Features
+
+### 🌌 3D Cinematic Entry Experience
+- **Interactive Book Cyclone**: Hundreds of rotating real book covers arranged in 3 three-dimensional orbital layers with varying speeds and tilt angles.
+- **Hyperspace Warp Transition**: Clicking **ENTER BOOKVERSE** accelerates the camera through the vortex center directly into the store homepage.
+- **Dynamic 3D Lighting & Particles**: Golden stardust particle field with additive blending and radial lighting.
+- **Direct Catalog Integration**: Live book covers fetched dynamically from the catalog API with graceful canvas fallback textures.
+- **Accessibility & Controls**: Mouse parallax, keyboard controls (<kbd>Enter</kbd> to launch, <kbd>Esc</kbd> to skip to store), and `prefers-reduced-motion` compliance.
 
 ### 👤 Customer Features
 - **Dynamic Browsing**: Explore a rich library of books categorized by genre (Fiction, Tech, Business, etc.).
@@ -50,12 +63,13 @@ Explore the visual design and user flow through these snapshots:
 
 ### Frontend
 - **Framework**: React 18 + Vite
+- **3D Graphics & WebGL**: Three.js (v0.186+) for multi-layer book cyclone and particle simulation
 - **Routing**: React Router DOM (v6)
 - **State & Context**: Context API (Auth, Cart, Theme, Toast)
 - **Data Fetching**: Axios & RESTful API Service Layer
 - **Charts & Visualization**: Chart.js & React-Chartjs-2
-- **Styling**: Custom CSS Design System with Glassmorphism, Neon accents & Theme Switcher (Dark/Light)
-- **Typography**: Inter (Google Fonts)
+- **Styling**: Custom CSS Design System with Glassmorphism, Gold/Neon accents & Responsive Layout
+- **Typography**: Playfair Display, Outfit, Inter (Google Fonts)
 
 ### Backend
 - **Framework**: Spring Boot 3.2.0 (Java 17)
@@ -138,7 +152,7 @@ Admin routes (`/admin`) and protected customer workflows are authenticated throu
 - `BACKEND_URL`: Custom backend API URL (defaults to `http://localhost:8080`)
 
 ### Commands
-Capture and verify all 6 screenshots:
+Capture and verify all 7 screenshots:
 ```bash
 npm run screenshots:update
 ```
@@ -147,10 +161,11 @@ npm run screenshots:update
 Capture a specific screenshot:
 ```bash
 # Capture single target page
-npm run screenshots:update -- --page admin_dashboard
+npm run screenshots:update -- --page landing_cyclone
 npm run screenshots:update -- --page user_home
 npm run screenshots:update -- --page books_listing
 npm run screenshots:update -- --page cart_checkout
+npm run screenshots:update -- --page admin_dashboard
 npm run screenshots:update -- --page admin_books
 npm run screenshots:update -- --page admin_orders
 ```
@@ -182,13 +197,16 @@ npm run screenshots:update -- --page admin_orders
 ```text
 BookVerse/
 ├── backend/            # Spring Boot application source code
-│   ├── src/            # Java controllers, services, repositories
+│   ├── src/            # Java controllers, services, repositories, entities
 │   └── pom.xml         # Maven dependencies
-├── frontend/webapp/    # UI assets (HTML, CSS, JS)
-│   ├── css/            # Modular stylesheets
-│   ├── js/             # Interactive logic and API handlers
-│   └── *.html          # Core page templates
-├── screenshots/        # Project visual assets
+├── frontend/           # React + Vite frontend application
+│   ├── src/
+│   │   ├── components/ # BookCycloneScene, Navbar, BookCard, CinematicHero, etc.
+│   │   ├── pages/      # LandingPage, Home, Books, Cart, AdminDashboard
+│   │   ├── services/   # REST API clients (books, auth, orders)
+│   │   └── styles/     # Design system, landing-cyclone, responsive layouts
+│   └── scripts/        # Automated screenshot updater (Playwright)
+├── screenshots/        # Project visual assets (7 UI screenshots)
 └── schema.sql          # MySQL database schema & seed data
 ```
 
