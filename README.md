@@ -112,7 +112,54 @@ mvn spring-boot:run
 ```
 
 **Start Frontend:**
-Simply open `frontend/webapp/index.html` in your browser, or serve it using a local server (e.g., Live Server in VS Code).
+```bash
+cd frontend
+npm run dev
+```
+The application will be accessible at `http://localhost:5173`.
+
+---
+
+## 📸 Automated Screenshot Capture
+
+BookVerse includes an automated screenshot capture system powered by Playwright to ensure project documentation always showcases the latest live UI.
+
+### Prerequisites
+- Node.js 18+
+- Active frontend server running on `http://localhost:5173` (`npm run dev`)
+- Active backend server running on `http://localhost:8080` (optional, but recommended for live data)
+- Playwright Chromium installed (`npx playwright install chromium`)
+
+### Authentication Configuration
+Admin routes (`/admin`) and protected customer workflows are authenticated through isolated session configuration via environment variables:
+- `TEST_ADMIN_EMAIL`: Defaults to `admin@bookverse.com`
+- `TEST_ADMIN_PASSWORD`: Defaults to `admin123`
+- `BOOKVERSE_URL`: Custom frontend URL (defaults to `http://localhost:5173`)
+- `BACKEND_URL`: Custom backend API URL (defaults to `http://localhost:8080`)
+
+### Commands
+Capture and verify all 6 screenshots:
+```bash
+npm run screenshots:update
+```
+*(Can be executed from repository root or inside `frontend/`)*
+
+Capture a specific screenshot:
+```bash
+# Capture single target page
+npm run screenshots:update -- --page admin_dashboard
+npm run screenshots:update -- --page user_home
+npm run screenshots:update -- --page books_listing
+npm run screenshots:update -- --page cart_checkout
+npm run screenshots:update -- --page admin_books
+npm run screenshots:update -- --page admin_orders
+```
+
+### Storage & Safety Guarantees
+- **Destination**: Screenshots are saved in the root `screenshots/` directory.
+- **Atomic Updates**: Captures are written to a temporary staging folder (`screenshots/.temp/`) first.
+- **Validation**: Each screenshot is verified to exist, be non-empty, and exceed a 10KB minimum payload threshold to prevent blank/broken renders.
+- **Error Reporting**: If an individual route fails (e.g. timeout or server unreachable), the existing valid screenshot is preserved untouched, and a diagnostic summary is printed to the terminal.
 
 ---
 

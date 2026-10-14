@@ -6,6 +6,7 @@ import CursorGlow from './components/CursorGlow';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 
+import LandingPage from './pages/LandingPage';
 import Home from './pages/Home';
 import Books from './pages/Books';
 import BookDetails from './pages/BookDetails';
@@ -19,14 +20,18 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 function App() {
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  const isLandingPage = location.pathname === '/' || location.pathname === '/landing';
 
   return (
     <>
-      <Navbar />
-      <CursorGlow />
-      <main className="main-content">
+      {!isLandingPage && <Navbar />}
+      {!isLandingPage && <CursorGlow />}
+      <main className={isLandingPage ? 'landing-main-content' : 'main-content'}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/store" element={<Home />} />
           <Route path="/books" element={<Books />} />
           <Route path="/books/:id" element={<BookDetails />} />
           <Route path="/cart" element={<Cart />} />
@@ -54,7 +59,7 @@ function App() {
           <Route path="*" element={<Home />} />
         </Routes>
       </main>
-      {!isAuthPage && <Footer />}
+      {!isAuthPage && !isLandingPage && <Footer />}
     </>
   );
 }

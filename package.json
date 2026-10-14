@@ -1,0 +1,10 @@
+{
+  "name": "bookverse",
+  "private": true,
+  "description": "BookVerse - Premium Online Bookstore",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "screenshots:update": "npm --prefix frontend run screenshots:update --"
+  }
+}

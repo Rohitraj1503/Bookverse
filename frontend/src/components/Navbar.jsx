@@ -60,14 +60,14 @@ const Navbar = () => {
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="container flex-between">
-          <Link to="/" className="nav-logo-link" title="BookVerse">
+          <Link to="/home" className="nav-logo-link" title="BookVerse">
             <img src="/logo.png" alt="BookVerse — Discover a Larger World" className="nav-logo-img" />
           </Link>
 
           <div className="nav-links editorial-nav-center">
             <NavLink
-              to="/"
-              className={({ isActive }) => `editorial-nav-link ${isActive ? 'active' : ''}`}
+              to="/home"
+              className={({ isActive }) => `editorial-nav-link ${isActive || location.pathname === '/store' ? 'active' : ''}`}
             >
               Home
             </NavLink>
@@ -83,11 +83,19 @@ const Navbar = () => {
             >
               Library
             </NavLink>
+            <NavLink
+              to="/landing"
+              className="editorial-nav-link"
+              title="Experience 3D Book Cyclone"
+              style={{ color: '#F0B90B' }}
+            >
+              ✦ 3D Cyclone
+            </NavLink>
             <a
               href="#categories"
               className="editorial-nav-link"
               onClick={(e) => {
-                if (location.pathname !== '/') {
+                if (location.pathname !== '/home' && location.pathname !== '/store') {
                   e.preventDefault();
                   navigate('/books');
                 }
@@ -211,8 +219,11 @@ const Navbar = () => {
       </nav>
 
       <div className={`mobile-nav ${mobileNavOpen ? 'active' : ''}`}>
-        <Link to="/" onClick={() => setMobileNavOpen(false)}>
+        <Link to="/home" onClick={() => setMobileNavOpen(false)}>
           Home
+        </Link>
+        <Link to="/landing" onClick={() => setMobileNavOpen(false)} style={{ color: '#F0B90B' }}>
+          ✦ 3D Cyclone
         </Link>
         <Link to="/books?sort=bestseller" onClick={() => setMobileNavOpen(false)}>
           Popular Lists

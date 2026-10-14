@@ -5,6 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import url('components.css');
 @import url('editorial-store.css');
+@import url('landing-cyclone.css');
 
 /* --- Design Tokens: Editorial Black & Gold Bookstore --- */
 :root {

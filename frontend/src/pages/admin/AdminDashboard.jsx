@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -68,6 +68,38 @@ const AdminDashboard = () => {
   const [showCustomLangInput, setShowCustomLangInput] = useState(false);
   const [editCustomLangInput, setEditCustomLangInput] = useState('');
   const [showEditCustomLangInput, setShowEditCustomLangInput] = useState(false);
+
+  // Admin Books table search, filtering, and pagination
+  const [bookSearchQuery, setBookSearchQuery] = useState('');
+  const [bookCategoryFilter, setBookCategoryFilter] = useState('ALL');
+  const [bookPage, setBookPage] = useState(1);
+  const BOOKS_PER_PAGE = 15;
+
+  const filteredAdminBooks = useMemo(() => {
+    return books.filter((b) => {
+      const q = (bookSearchQuery || '').toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        (b.title && b.title.toLowerCase().includes(q)) ||
+        (b.author && b.author.toLowerCase().includes(q)) ||
+        (b.isbn && b.isbn.toLowerCase().includes(q));
+      const matchesCategory =
+        bookCategoryFilter === 'ALL' ||
+        (b.category && b.category.toLowerCase() === bookCategoryFilter.toLowerCase());
+      return matchesSearch && matchesCategory;
+    });
+  }, [books, bookSearchQuery, bookCategoryFilter]);
+
+  const totalAdminBookPages = Math.max(1, Math.ceil(filteredAdminBooks.length / BOOKS_PER_PAGE));
+  const paginatedAdminBooks = useMemo(() => {
+    const startIndex = (bookPage - 1) * BOOKS_PER_PAGE;
+    return filteredAdminBooks.slice(startIndex, startIndex + BOOKS_PER_PAGE);
+  }, [filteredAdminBooks, bookPage, BOOKS_PER_PAGE]);
+
+  // Reset to page 1 if query/filter changes
+  useEffect(() => {
+    setBookPage(1);
+  }, [bookSearchQuery, bookCategoryFilter]);
 
   const handleAddNewLanguage = async (name, target = 'new') => {
     if (!name || !name.trim()) return;
@@ -630,19 +662,19 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="container" style={{ paddingTop: 'calc(var(--nav-height) + 32px)', paddingBottom: '80px' }}>
-      {/* Header */}
-      <div className="flex-between mb-3" style={{ flexWrap: 'wrap', gap: '16px' }}>
-        <div>
-          <h2 style={{ fontSize: '1.8rem', fontWeight: 700 }}>
+    <div className="container admin-dashboard" style={{ paddingTop: 'calc(var(--nav-height) + 24px)', paddingBottom: '80px' }}>
+      {/* Admin Header */}
+      <div className="admin-header">
+        <div className="admin-header-titles">
+          <h2 style={{ fontSize: '1.8rem', fontWeight: 700, margin: 0 }}>
             📊 Admin <span className="text-gradient">Dashboard</span>
           </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '4px 0 0 0' }}>
             Store operations, inventory alerts, orders, coupons, and content moderation
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <button className="btn btn-secondary btn-sm" onClick={loadData}>
+        <div className="admin-header-actions">
+          <button className="btn btn-secondary btn-sm" onClick={loadData} title="Reload live data">
             🔄 Refresh
           </button>
           <button
@@ -666,7 +698,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="admin-stats" id="statsCards">
+      <div className="admin-stats admin-stats-grid" id="statsCards">
         {stats.map((s, i) => (
           <div key={i} className="stat-card animate-fade-up">
             <div className="stat-icon" style={{ background: s.iconBg }}>
@@ -682,19 +714,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Tabs Menu */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '6px',
-          marginBottom: '24px',
-          background: 'var(--bg-glass)',
-          padding: '4px',
-          borderRadius: 'var(--radius-md)',
-          width: 'fit-content',
-          border: 'var(--border-glass)',
-          flexWrap: 'wrap',
-        }}
-      >
+      <div className="admin-tabs-bar">
         <button
           className={`btn ${activeTab === 'books' ? 'btn-primary' : 'btn-secondary'} btn-sm`}
           onClick={() => setActiveTab('books')}
@@ -770,106 +790,230 @@ const AdminDashboard = () => {
       <div id="adminContent">
         {/* BOOKS TAB */}
         {activeTab === 'books' && (
-          <div className="glass-card" style={{ padding: 0, overflowX: 'auto' }}>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Cover</th>
-                  <th>Title & Subtitle</th>
-                  <th>Author</th>
-                  <th>Language</th>
-                  <th>Format</th>
-                  <th>Category</th>
-                  <th>Price</th>
-                  <th>Stock</th>
-                  <th>ISBN</th>
-                  <th>Rating</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {books.map((b) => (
-                  <tr key={b.id}>
-                    <td>
-                      <div style={{ width: '40px', height: '56px' }}>
-                        <BookCover
-                          src={b.coverUrl || b.cover}
-                          title={b.title}
-                          author={b.author}
-                          size="sm"
-                          fit="cover"
-                        />
-                      </div>
-                    </td>
-                    <td>
-                      <strong>{b.title}</strong>
-                      {b.subtitle && (
-                        <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                          {b.subtitle}
-                        </span>
-                      )}
-                      {b.seriesName && (
-                        <span style={{ display: 'block', fontSize: '0.72rem', color: 'var(--accent, #a855f7)' }}>
-                          Series: {b.seriesName} {b.volumeNumber ? `(Vol. ${b.volumeNumber})` : ''}
-                        </span>
-                      )}
-                    </td>
-                    <td style={{ color: 'var(--text-secondary)' }}>{b.author}</td>
-                    <td>
-                      <span className="badge badge-purple">{b.language || 'English'}</span>
-                    </td>
-                    <td>
-                      <span className="badge badge-secondary">{b.format || 'Paperback'}</span>
-                    </td>
-                    <td>
-                      <span className="badge badge-purple">{b.category || 'General'}</span>
-                    </td>
-                    <td style={{ fontWeight: 600 }}>{formatPrice(b.price)}</td>
-                    <td>
-                      <span
-                        className={`badge ${
-                          b.stock > 20
-                            ? 'badge-success'
-                            : b.stock > 0
-                            ? 'badge-warning'
-                            : 'badge-danger'
-                        }`}
-                      >
-                        {b.stock}
-                      </span>
-                    </td>
-                    <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
-                      {b.isbn || '—'}
-                    </td>
-                    <td>★ {Number(b.rating || 0).toFixed(1)}</td>
-                    <td>
-                      <div style={{ display: 'flex', gap: '6px' }}>
-                        <button
-                          className="btn btn-secondary btn-sm"
-                          onClick={() => handleOpenEdit(b)}
-                          title="Edit Book"
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleOpenDelete(b)}
-                          title="Delete Book"
-                        >
-                          🗑️
-                        </button>
-                      </div>
-                    </td>
+          <div className="admin-books-section">
+            {/* Books Toolbar */}
+            <div className="admin-books-toolbar">
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap', flex: 1 }}>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="🔍 Search by title, author, or ISBN..."
+                  value={bookSearchQuery}
+                  onChange={(e) => setBookSearchQuery(e.target.value)}
+                  style={{ maxWidth: '320px', minWidth: '220px', padding: '8px 14px', fontSize: '0.85rem' }}
+                />
+                <select
+                  className="form-input"
+                  value={bookCategoryFilter}
+                  onChange={(e) => setBookCategoryFilter(e.target.value)}
+                  style={{ width: 'auto', padding: '8px 14px', fontSize: '0.85rem' }}
+                >
+                  <option value="ALL">All Categories ({books.length})</option>
+                  {categories.map((c) => (
+                    <option key={c.id || c.name} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                {(bookSearchQuery || bookCategoryFilter !== 'ALL') && (
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => {
+                      setBookSearchQuery('');
+                      setBookCategoryFilter('ALL');
+                    }}
+                    style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+                  >
+                    ✕ Clear Filters
+                  </button>
+                )}
+              </div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                Showing <strong>{filteredAdminBooks.length > 0 ? (bookPage - 1) * BOOKS_PER_PAGE + 1 : 0}</strong>–
+                <strong>{Math.min(bookPage * BOOKS_PER_PAGE, filteredAdminBooks.length)}</strong> of{' '}
+                <strong>{filteredAdminBooks.length}</strong> books
+              </div>
+            </div>
+
+            {/* Table in dedicated horizontal scrolling container */}
+            <div className="admin-table-wrapper">
+              <table className="data-table admin-books-table">
+                <thead>
+                  <tr>
+                    <th className="col-cover">Cover</th>
+                    <th className="col-title">Title & Subtitle</th>
+                    <th className="col-author">Author</th>
+                    <th>Language</th>
+                    <th>Format</th>
+                    <th>Category</th>
+                    <th className="col-nowrap">Price</th>
+                    <th>Stock</th>
+                    <th className="col-nowrap">ISBN</th>
+                    <th className="col-nowrap">Rating</th>
+                    <th className="col-nowrap">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {paginatedAdminBooks.length === 0 ? (
+                    <tr>
+                      <td colSpan="11" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+                        No books found matching your criteria.
+                      </td>
+                    </tr>
+                  ) : (
+                    paginatedAdminBooks.map((b) => (
+                      <tr key={b.id}>
+                        <td className="col-cover">
+                          <div className="admin-cover-box">
+                            <BookCover
+                              src={b.coverUrl || b.cover}
+                              title={b.title}
+                              author={b.author}
+                              size="sm"
+                              fit="cover"
+                              className="book-cover"
+                            />
+                          </div>
+                        </td>
+                        <td className="col-title">
+                          <strong style={{ display: 'block', color: 'var(--text-primary)' }}>{b.title}</strong>
+                          {b.subtitle && (
+                            <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                              {b.subtitle}
+                            </span>
+                          )}
+                          {b.seriesName && (
+                            <span style={{ display: 'block', fontSize: '0.72rem', color: 'var(--accent, #a855f7)' }}>
+                              Series: {b.seriesName} {b.volumeNumber ? `(Vol. ${b.volumeNumber})` : ''}
+                            </span>
+                          )}
+                        </td>
+                        <td className="col-author" style={{ color: 'var(--text-secondary)' }}>
+                          {b.author}
+                        </td>
+                        <td>
+                          <span className="badge badge-purple">{b.language || 'English'}</span>
+                        </td>
+                        <td>
+                          <span className="badge badge-secondary">{b.format || 'Paperback'}</span>
+                        </td>
+                        <td>
+                          <span className="badge badge-purple">{b.category || 'General'}</span>
+                        </td>
+                        <td className="col-nowrap" style={{ fontWeight: 600 }}>
+                          {formatPrice(b.price)}
+                        </td>
+                        <td>
+                          <span
+                            className={`badge ${
+                              b.stock > 20
+                                ? 'badge-success'
+                                : b.stock > 0
+                                ? 'badge-warning'
+                                : 'badge-danger'
+                            }`}
+                          >
+                            {b.stock}
+                          </span>
+                        </td>
+                        <td
+                          className="col-nowrap"
+                          style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}
+                        >
+                          {b.isbn || '—'}
+                        </td>
+                        <td className="col-nowrap">★ {Number(b.rating || 0).toFixed(1)}</td>
+                        <td className="col-nowrap">
+                          <div style={{ display: 'flex', gap: '6px' }}>
+                            <button
+                              className="btn btn-secondary btn-sm"
+                              onClick={() => handleOpenEdit(b)}
+                              title="Edit Book"
+                            >
+                              ✏️
+                            </button>
+                            <button
+                              className="btn btn-danger btn-sm"
+                              onClick={() => handleOpenDelete(b)}
+                              title="Delete Book"
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination Controls */}
+            {totalAdminBookPages > 1 && (
+              <div className="admin-pagination">
+                <div className="admin-pagination-info">
+                  Page <strong>{bookPage}</strong> of <strong>{totalAdminBookPages}</strong> (
+                  {filteredAdminBooks.length} books total)
+                </div>
+                <div className="admin-pagination-buttons">
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    disabled={bookPage <= 1}
+                    onClick={() => setBookPage(1)}
+                    title="First page"
+                  >
+                    «
+                  </button>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    disabled={bookPage <= 1}
+                    onClick={() => setBookPage((p) => Math.max(1, p - 1))}
+                  >
+                    ‹ Prev
+                  </button>
+                  {Array.from({ length: totalAdminBookPages }, (_, idx) => idx + 1)
+                    .filter((p) => p === 1 || p === totalAdminBookPages || Math.abs(p - bookPage) <= 2)
+                    .map((p, i, arr) => {
+                      const prevPage = arr[i - 1];
+                      return (
+                        <React.Fragment key={p}>
+                          {prevPage && p - prevPage > 1 && (
+                            <span style={{ color: 'var(--text-muted)', padding: '0 4px' }}>…</span>
+                          )}
+                          <button
+                            className={`btn ${bookPage === p ? 'btn-primary' : 'btn-secondary'} btn-sm`}
+                            onClick={() => setBookPage(p)}
+                            style={{ minWidth: '34px', padding: '6px 10px' }}
+                          >
+                            {p}
+                          </button>
+                        </React.Fragment>
+                      );
+                    })}
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    disabled={bookPage >= totalAdminBookPages}
+                    onClick={() => setBookPage((p) => Math.min(totalAdminBookPages, p + 1))}
+                  >
+                    Next ›
+                  </button>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    disabled={bookPage >= totalAdminBookPages}
+                    onClick={() => setBookPage(totalAdminBookPages)}
+                    title="Last page"
+                  >
+                    »
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
         {/* ORDERS TAB */}
         {activeTab === 'orders' && (
-          <div className="glass-card" style={{ padding: 0, overflowX: 'auto' }}>
+          <div className="admin-table-wrapper">
             {orders.length === 0 ? (
               <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
                 No customer orders placed yet.
@@ -950,30 +1094,31 @@ const AdminDashboard = () => {
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>No titles currently below the 10-unit replenishment threshold.</p>
               </div>
             ) : (
-              <div style={{ overflowX: 'auto' }}>
-                <table className="data-table">
+              <div className="admin-table-wrapper">
+                <table className="data-table admin-books-table">
                   <thead>
                     <tr>
-                      <th>Cover</th>
-                      <th>Title</th>
-                      <th>Author</th>
+                      <th className="col-cover">Cover</th>
+                      <th className="col-title">Title</th>
+                      <th className="col-author">Author</th>
                       <th>Category</th>
-                      <th>Price</th>
+                      <th className="col-nowrap">Price</th>
                       <th>Remaining Stock</th>
-                      <th>Replenishment Action</th>
+                      <th className="col-nowrap">Replenishment Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {lowStockBooks.map((b) => (
                       <tr key={'alert-' + b.id}>
-                        <td>
-                          <div style={{ width: '36px', height: '50px' }}>
+                        <td className="col-cover">
+                          <div className="admin-cover-box">
                             <BookCover
                               src={b.coverUrl || b.cover}
                               title={b.title}
                               author={b.author}
                               size="sm"
                               fit="cover"
+                              className="book-cover"
                             />
                           </div>
                         </td>
@@ -1024,7 +1169,7 @@ const AdminDashboard = () => {
                 No reviews found to moderate.
               </div>
             ) : (
-              <div style={{ overflowX: 'auto' }}>
+              <div className="admin-table-wrapper">
                 <table className="data-table">
                   <thead>
                     <tr>
@@ -1098,7 +1243,7 @@ const AdminDashboard = () => {
                 No active promo coupons. Click above to create one.
               </div>
             ) : (
-              <div style={{ overflowX: 'auto' }}>
+              <div className="admin-table-wrapper">
                 <table className="data-table">
                   <thead>
                     <tr>
