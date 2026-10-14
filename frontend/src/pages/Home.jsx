@@ -101,6 +101,7 @@ const Home = () => {
       {/* 1. CINEMATIC HERO SECTION */}
       {primaryHeroBook && (
         <CinematicHero
+          books={featuredBooks.length >= 3 ? featuredBooks : allBooks.slice(0, 6)}
           primaryBook={primaryHeroBook}
           secondaryBooks={secondaryHeroBooks}
         />
