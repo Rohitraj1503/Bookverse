@@ -17,6 +17,11 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     Optional<Book> findByIsbn(String isbn);
     boolean existsByIsbn(String isbn);
+    Optional<Book> findByTitleIgnoreCaseAndAuthorIgnoreCase(String title, String author);
+    boolean existsByTitleIgnoreCaseAndAuthorIgnoreCase(String title, String author);
+    long countByCoverUrlIsNotNull();
+    long countByLanguageIgnoreCase(String language);
+    long countByCategoryId(Integer categoryId);
 
     List<Book> findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(String title, String author);
     List<Book> findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCaseOrIsbnContainingIgnoreCase(String title, String author, String isbn);

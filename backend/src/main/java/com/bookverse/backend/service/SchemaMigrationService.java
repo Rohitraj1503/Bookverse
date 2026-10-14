@@ -326,6 +326,18 @@ public class SchemaMigrationService implements CommandLineRunner {
             System.out.println("Skip language native names fix: " + e.getMessage());
         }
 
+        // ── 11. Expand book column sizes for large-scale external catalog imports ───────
+        try {
+            jdbcTemplate.execute("ALTER TABLE books MODIFY COLUMN author VARCHAR(500) NOT NULL");
+            jdbcTemplate.execute("ALTER TABLE books MODIFY COLUMN title VARCHAR(500) NOT NULL");
+            jdbcTemplate.execute("ALTER TABLE books MODIFY COLUMN subtitle VARCHAR(500)");
+            jdbcTemplate.execute("ALTER TABLE books MODIFY COLUMN publisher VARCHAR(300)");
+            jdbcTemplate.execute("ALTER TABLE books MODIFY COLUMN cover_url VARCHAR(1000)");
+            System.out.println("Book column widths expanded for high-capacity metadata.");
+        } catch (Exception e) {
+            System.out.println("Skip column width expansion: " + e.getMessage());
+        }
+
         System.out.println("=== Schema Migration Complete ===");
     }
 }

@@ -23,6 +23,9 @@ public class BookController {
     @Autowired
     private ExternalBookService externalBookService;
 
+    @Autowired
+    private com.bookverse.backend.service.CatalogImportService catalogImportService;
+
     @GetMapping
     public List<Book> getAll() {
         return bookService.getAll();
@@ -127,6 +130,57 @@ public class BookController {
             return ResponseEntity.ok(candidates);
         } catch (Exception e) {
             return ResponseEntity.ok(Collections.emptyList());
+        }
+    }
+
+    @GetMapping("/catalog-stats")
+    public ResponseEntity<?> getCatalogStats() {
+        return ResponseEntity.ok(catalogImportService.getCatalogStats());
+    }
+
+    @GetMapping("/catalog-search")
+    public ResponseEntity<?> catalogSearch(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String language,
+            @RequestParam(defaultValue = "0") int startIndex,
+            @RequestParam(defaultValue = "20") int limit) {
+        try {
+            List<Map<String, Object>> candidates = catalogImportService.searchExternalCatalog(query, category, language, startIndex, limit);
+            return ResponseEntity.ok(candidates);
+        } catch (Exception e) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+    }
+
+    @PostMapping("/catalog-import")
+    public ResponseEntity<?> catalogImport(@RequestBody List<Map<String, Object>> candidates) {
+        if (candidates == null || candidates.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "No candidates provided for import"));
+        }
+        try {
+            Map<String, Object> result = catalogImportService.importCandidates(candidates);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Import failed: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/auto-import")
+    public ResponseEntity<?> autoImport(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String language,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String query,
+            @RequestParam(defaultValue = "50") int targetCount) {
+        try {
+            String effectiveKeyword = keyword != null && !keyword.trim().isEmpty() ? keyword : query;
+            Map<String, Object> report = catalogImportService.executeAutomatedBatchImport(category, language, effectiveKeyword, targetCount);
+            return ResponseEntity.ok(report);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Batch import failed: " + e.getMessage()));
         }
     }
 

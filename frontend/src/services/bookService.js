@@ -150,6 +150,30 @@ export const bookService = {
     return response.data || [];
   },
 
+  async getCatalogStats() {
+    const response = await api.get('/books/catalog-stats');
+    return response.data;
+  },
+
+  async searchCatalog({ query, category, language, startIndex = 0, limit = 20 }) {
+    const response = await api.get('/books/catalog-search', {
+      params: { query, category, language, startIndex, limit }
+    });
+    return response.data || [];
+  },
+
+  async importCatalogCandidates(candidates) {
+    const response = await api.post('/books/catalog-import', candidates);
+    return response.data;
+  },
+
+  async autoImportCatalog({ category, language, keyword, targetCount = 50 }) {
+    const response = await api.post('/books/auto-import', null, {
+      params: { category, language, keyword, targetCount }
+    });
+    return response.data;
+  },
+
   transformBook(b) {
     if (!b) return null;
     const transformed = { ...b };

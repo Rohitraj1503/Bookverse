@@ -27,6 +27,7 @@ import ExternalLookupModal from '../../components/ExternalLookupModal';
 import CoverSelectorModal from '../../components/CoverSelectorModal';
 import BookCover from '../../components/BookCover';
 import CategoryIcon from '../../components/CategoryIcon';
+import CatalogImportTab from '../../components/CatalogImportTab';
 
 ChartJS.register(
   CategoryScale,
@@ -751,6 +752,17 @@ const AdminDashboard = () => {
         >
           📈 Analytics
         </button>
+        <button
+          className={`btn ${activeTab === 'catalogImport' ? 'btn-primary' : 'btn-secondary'} btn-sm`}
+          onClick={() => setActiveTab('catalogImport')}
+          style={{
+            border: activeTab === 'catalogImport' ? 'none' : '1px solid #10b981',
+            color: activeTab === 'catalogImport' ? '#fff' : '#10b981',
+            fontWeight: 600,
+          }}
+        >
+          🌐 Global Catalog Import
+        </button>
       </div>
 
       {/* Tab Contents */}
@@ -1243,6 +1255,15 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* CATALOG IMPORT TAB */}
+        {activeTab === 'catalogImport' && (
+          <CatalogImportTab
+            categories={categories}
+            languages={languages}
+            onBooksUpdated={loadData}
+          />
         )}
       </div>
 
